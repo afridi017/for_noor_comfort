@@ -1,0 +1,1538 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>For Noor — On A Heavy Day 🌙</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400;1,500&family=Inter:wght@300;400;500;600&family=Playfair+Display:ital,wght@0,400;0,600;1,400;1,500&display=swap');
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+:root {
+  --navy-dark: #0a1628;
+  --navy-mid: #142850;
+  --gold: #d4af37;
+  --gold-light: #f4d47c;
+  --rose: #b76e79;
+  --rose-light: #d4a5aa;
+  --cream: #f5e6d3;
+  --white-soft: #f8f4ef;
+  --text-muted: rgba(245, 230, 211, 0.6);
+  --lavender: #9b8ec4;
+}
+
+body {
+  font-family: 'Inter', sans-serif;
+  min-height: 100vh;
+  overflow-x: hidden;
+  background: var(--navy-dark);
+  color: var(--white-soft);
+}
+
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background:
+    radial-gradient(ellipse at top left, rgba(155, 142, 196, 0.07) 0%, transparent 50%),
+    radial-gradient(ellipse at bottom right, rgba(183, 110, 121, 0.07) 0%, transparent 50%),
+    radial-gradient(ellipse at center, rgba(212, 175, 55, 0.04) 0%, transparent 60%),
+    linear-gradient(180deg, #0a1628 0%, #142850 50%, #0a1628 100%);
+  z-index: 0;
+}
+
+#stars-canvas {
+  position: fixed;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
+}
+
+/* ==========================================
+   PAGE SYSTEM
+   ========================================== */
+.page {
+  display: none;
+  position: relative;
+  z-index: 10;
+  min-height: 100vh;
+  padding: 40px 20px;
+}
+.page.active {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  animation: fadeUp 1s ease;
+}
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(30px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* ==========================================
+   CARD
+   ========================================== */
+.card {
+  background: linear-gradient(135deg, rgba(20, 40, 80, 0.6), rgba(10, 22, 40, 0.8));
+  backdrop-filter: blur(30px);
+  -webkit-backdrop-filter: blur(30px);
+  border: 1px solid rgba(212, 175, 55, 0.18);
+  border-radius: 24px;
+  padding: 50px 35px;
+  max-width: 440px;
+  width: 100%;
+  text-align: center;
+  box-shadow:
+    0 30px 80px rgba(0, 0, 0, 0.5),
+    0 0 60px rgba(155, 142, 196, 0.06),
+    inset 0 1px 0 rgba(255, 255, 255, 0.08);
+  position: relative;
+}
+.card::before {
+  content: '';
+  position: absolute;
+  top: 20px; left: 20px; right: 20px; bottom: 20px;
+  border: 1px solid rgba(212, 175, 55, 0.12);
+  border-radius: 18px;
+  pointer-events: none;
+}
+
+/* ==========================================
+   TYPOGRAPHY
+   ========================================== */
+.eyebrow {
+  font-size: 11px;
+  letter-spacing: 4px;
+  text-transform: uppercase;
+  color: var(--gold);
+  margin-bottom: 20px;
+  font-weight: 500;
+  opacity: 0.8;
+}
+
+.title-italic {
+  font-family: 'Playfair Display', serif;
+  font-style: italic;
+  font-size: 40px;
+  font-weight: 400;
+  background: linear-gradient(135deg, var(--gold), var(--gold-light), var(--rose-light));
+  background-clip: text;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  color: transparent;
+  margin-bottom: 18px;
+  line-height: 1.2;
+}
+
+.subtitle {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 20px;
+  font-weight: 300;
+  color: var(--text-muted);
+  font-style: italic;
+  margin-bottom: 22px;
+}
+
+.text-body {
+  font-size: 15px;
+  color: var(--text-muted);
+  line-height: 1.9;
+  margin: 18px 0;
+  font-weight: 300;
+}
+
+.text-quote {
+  font-family: 'Playfair Display', serif;
+  font-style: italic;
+  font-size: 20px;
+  color: var(--white-soft);
+  line-height: 1.8;
+  margin: 22px 0;
+}
+
+.text-script {
+  font-family: 'Cormorant Garamond', serif;
+  font-style: italic;
+  font-size: 19px;
+  color: var(--gold-light);
+  line-height: 2;
+  margin: 12px 0;
+}
+
+.divider {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  margin: 25px 0;
+  color: var(--gold);
+  opacity: 0.6;
+}
+.divider::before, .divider::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--gold), transparent);
+}
+
+/* ==========================================
+   BUTTONS
+   ========================================== */
+.btn {
+  padding: 16px 40px;
+  border: 1px solid var(--gold);
+  background: transparent;
+  color: var(--gold);
+  font-family: 'Inter', sans-serif;
+  font-size: 13px;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  cursor: pointer;
+  margin: 10px 5px;
+  transition: all 0.5s ease;
+  border-radius: 2px;
+  position: relative;
+  overflow: hidden;
+  font-weight: 500;
+}
+.btn::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(135deg, var(--gold), var(--gold-light));
+  transform: translateY(100%);
+  transition: transform 0.5s ease;
+  z-index: -1;
+}
+.btn:hover::before { transform: translateY(0); }
+.btn:hover { color: var(--navy-dark); }
+
+.btn-filled {
+  background: linear-gradient(135deg, var(--gold), var(--gold-light));
+  color: var(--navy-dark);
+  font-weight: 600;
+}
+.btn-filled:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 30px rgba(212, 175, 55, 0.3);
+}
+
+.btn-rose {
+  border-color: var(--rose);
+  color: var(--rose-light);
+}
+.btn-rose::before {
+  background: linear-gradient(135deg, var(--rose), var(--rose-light));
+}
+.btn-rose:hover { color: var(--navy-dark); }
+
+/* ==========================================
+   PAGE 1: MOON OPENING
+   ========================================== */
+.moon-scene {
+  position: relative;
+  width: 140px;
+  height: 140px;
+  margin: 30px auto;
+}
+.moon {
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  background: radial-gradient(circle at 35% 35%, #f5e6d3, #d4c5a9 60%, #b8a888);
+  box-shadow:
+    0 0 40px rgba(245, 230, 211, 0.3),
+    0 0 80px rgba(212, 175, 55, 0.15),
+    inset -15px -10px 30px rgba(0,0,0,0.15);
+  animation: moonGlow 4s ease infinite;
+}
+@keyframes moonGlow {
+  0%, 100% { box-shadow: 0 0 40px rgba(245,230,211,0.3), 0 0 80px rgba(212,175,55,0.15), inset -15px -10px 30px rgba(0,0,0,0.15); }
+  50% { box-shadow: 0 0 60px rgba(245,230,211,0.45), 0 0 120px rgba(212,175,55,0.25), inset -15px -10px 30px rgba(0,0,0,0.15); }
+}
+.moon-crater {
+  position: absolute;
+  border-radius: 50%;
+  background: rgba(0,0,0,0.08);
+}
+.mc1 { width: 25px; height: 25px; top: 30px; left: 35px; }
+.mc2 { width: 15px; height: 15px; top: 60px; left: 70px; }
+.mc3 { width: 18px; height: 18px; top: 80px; left: 40px; }
+
+/* ==========================================
+   PAGE 2: VALIDATION (I Know Today Was Hard)
+   ========================================== */
+.validation-line {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 19px;
+  font-style: italic;
+  color: var(--white-soft);
+  line-height: 2;
+  margin: 14px 0;
+  opacity: 0;
+  transform: translateY(15px);
+  transition: all 0.9s ease;
+}
+.validation-line.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+.validation-line.gold {
+  color: var(--gold-light);
+  font-size: 22px;
+}
+.validation-line.rose {
+  color: var(--rose-light);
+}
+
+.tear-drop {
+  font-size: 50px;
+  margin: 15px 0;
+  animation: tearFall 3s ease infinite;
+  opacity: 0.8;
+}
+@keyframes tearFall {
+  0% { transform: translateY(-10px); opacity: 0; }
+  30% { opacity: 0.9; }
+  100% { transform: translateY(15px); opacity: 0; }
+}
+
+/* ==========================================
+   PAGE 3: BREATHING EXERCISE
+   ========================================== */
+.breath-container {
+  position: relative;
+  width: 240px;
+  height: 240px;
+  margin: 30px auto;
+}
+.breath-circle {
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(212,175,55,0.15), rgba(155,142,196,0.1));
+  border: 2px solid rgba(212, 175, 55, 0.4);
+  transition: transform 4s ease-in-out;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.breath-circle.inhale {
+  transform: scale(1.35);
+  border-color: var(--gold);
+  box-shadow: 0 0 60px rgba(212,175,55,0.25);
+}
+.breath-circle.exhale {
+  transform: scale(1);
+  border-color: var(--lavender);
+}
+.breath-text {
+  font-family: 'Cormorant Garamond', serif;
+  font-style: italic;
+  font-size: 22px;
+  color: var(--gold-light);
+  transition: opacity 0.5s ease;
+}
+.breath-ring {
+  position: absolute;
+  inset: -20px;
+  border-radius: 50%;
+  border: 1px solid rgba(212,175,55,0.2);
+  animation: ringPulse 4s ease infinite;
+}
+@keyframes ringPulse {
+  0%, 100% { transform: scale(1); opacity: 0.5; }
+  50% { transform: scale(1.1); opacity: 0.2; }
+}
+.breath-count {
+  font-size: 13px;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  margin-top: 15px;
+}
+
+/* ==========================================
+   PAGE 4: RELEASE WORRIES
+   ========================================== */
+.worry-field {
+  position: relative;
+  width: 100%;
+  height: 320px;
+  margin: 20px 0;
+  border-radius: 16px;
+  background: rgba(0,0,0,0.15);
+  border: 1px solid rgba(212,175,55,0.1);
+  overflow: hidden;
+}
+.worry-bubble {
+  position: absolute;
+  padding: 12px 18px;
+  background: rgba(155, 142, 196, 0.15);
+  border: 1px solid rgba(155, 142, 196, 0.4);
+  border-radius: 30px;
+  font-family: 'Cormorant Garamond', serif;
+  font-style: italic;
+  font-size: 14px;
+  color: var(--white-soft);
+  cursor: pointer;
+  transition: all 0.5s ease;
+  animation: worryFloat 5s ease-in-out infinite;
+  user-select: none;
+}
+@keyframes worryFloat {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-12px); }
+}
+.worry-bubble.released {
+  background: rgba(212, 175, 55, 0.2);
+  border-color: var(--gold);
+  transform: scale(0);
+  opacity: 0;
+}
+.release-msg {
+  position: absolute;
+  font-family: 'Cormorant Garamond', serif;
+  font-style: italic;
+  font-size: 18px;
+  color: var(--gold-light);
+  pointer-events: none;
+  animation: releaseRise 2s ease forwards;
+  white-space: nowrap;
+}
+@keyframes releaseRise {
+  0% { opacity: 1; transform: translateY(0); }
+  100% { opacity: 0; transform: translateY(-60px); }
+}
+
+/* ==========================================
+   PAGE 5: HER STRENGTH
+   ========================================== */
+.strength-item {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  padding: 16px 18px;
+  margin: 10px 0;
+  background: rgba(255,255,255,0.03);
+  border: 1px solid rgba(212,175,55,0.12);
+  border-radius: 12px;
+  text-align: left;
+  opacity: 0;
+  transform: translateX(-25px);
+  transition: all 0.7s ease;
+}
+.strength-item.visible {
+  opacity: 1;
+  transform: translateX(0);
+}
+.strength-icon {
+  font-size: 26px;
+  min-width: 35px;
+}
+.strength-text {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 16px;
+  font-style: italic;
+  color: var(--white-soft);
+  line-height: 1.5;
+}
+
+/* ==========================================
+   PAGE 6: TRUTH CARDS (Flip)
+   ========================================== */
+.truth-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+  margin: 25px 0;
+}
+.truth-card {
+  perspective: 800px;
+  height: 150px;
+  cursor: pointer;
+}
+.truth-inner {
+  width: 100%;
+  height: 100%;
+  position: relative;
+  transform-style: preserve-3d;
+  transition: transform 0.8s ease;
+}
+.truth-card.flipped .truth-inner {
+  transform: rotateY(180deg);
+}
+.truth-front, .truth-back {
+  position: absolute;
+  inset: 0;
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+  border-radius: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 15px;
+}
+.truth-front {
+  background: linear-gradient(135deg, rgba(212,175,55,0.15), rgba(155,142,196,0.12));
+  border: 1px solid rgba(212,175,55,0.3);
+  font-family: 'Playfair Display', serif;
+  font-style: italic;
+  font-size: 15px;
+  color: var(--gold-light);
+}
+.truth-back {
+  background: linear-gradient(135deg, var(--rose), var(--lavender));
+  transform: rotateY(180deg);
+  font-family: 'Cormorant Garamond', serif;
+  font-style: italic;
+  font-size: 15px;
+  color: white;
+  line-height: 1.5;
+}
+
+/* ==========================================
+   PAGE 7: HUG BUTTON (Press & Hold)
+   ========================================== */
+.hug-container {
+  margin: 30px 0;
+  position: relative;
+}
+.hug-btn {
+  width: 160px;
+  height: 160px;
+  border-radius: 50%;
+  border: 2px solid var(--rose);
+  background: radial-gradient(circle, rgba(183,110,121,0.2), rgba(183,110,121,0.05));
+  color: var(--rose-light);
+  font-family: 'Cormorant Garamond', serif;
+  font-style: italic;
+  font-size: 18px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  user-select: none;
+  -webkit-user-select: none;
+  position: relative;
+  overflow: hidden;
+}
+.hug-fill {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 0%;
+  background: linear-gradient(to top, var(--rose), var(--rose-light));
+  transition: height 0.1s linear;
+  z-index: 0;
+  opacity: 0.5;
+}
+.hug-label {
+  position: relative;
+  z-index: 2;
+}
+.hug-btn.hugging {
+  border-color: var(--gold);
+  box-shadow: 0 0 50px rgba(183,110,121,0.4);
+}
+.hug-status {
+  font-family: 'Cormorant Garamond', serif;
+  font-style: italic;
+  font-size: 18px;
+  color: var(--gold-light);
+  min-height: 50px;
+  margin-top: 20px;
+  line-height: 1.6;
+}
+
+.hug-heart {
+  position: fixed;
+  font-size: 22px;
+  pointer-events: none;
+  z-index: 150;
+  animation: hugHeartRise 2s ease forwards;
+}
+@keyframes hugHeartRise {
+  0% { opacity: 1; transform: translateY(0) scale(1); }
+  100% { opacity: 0; transform: translateY(-150px) scale(1.5); }
+}
+
+/* ==========================================
+   PAGE 8: REASONS COUNTER
+   ========================================== */
+.reason-display {
+  min-height: 130px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 25px;
+  background: rgba(212,175,55,0.06);
+  border: 1px solid rgba(212,175,55,0.2);
+  border-radius: 16px;
+  margin: 25px 0;
+}
+.reason-text {
+  font-family: 'Cormorant Garamond', serif;
+  font-style: italic;
+  font-size: 21px;
+  color: var(--gold-light);
+  line-height: 1.7;
+  animation: reasonIn 0.8s ease;
+}
+@keyframes reasonIn {
+  from { opacity: 0; transform: translateY(15px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+.reason-counter {
+  font-size: 12px;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  margin-bottom: 10px;
+}
+
+/* ==========================================
+   PAGE 9: LETTER
+   ========================================== */
+.letter-parchment {
+  background: linear-gradient(135deg, rgba(245,230,211,0.05), rgba(212,175,55,0.04));
+  border: 1px solid rgba(212,175,55,0.22);
+  border-radius: 12px;
+  padding: 35px 25px;
+  margin: 25px 0;
+  position: relative;
+  max-height: 380px;
+  overflow-y: auto;
+}
+.letter-parchment::-webkit-scrollbar { width: 4px; }
+.letter-parchment::-webkit-scrollbar-thumb { background: var(--gold); border-radius: 4px; }
+.letter-parchment::before,
+.letter-parchment::after {
+  content: '';
+  position: absolute;
+  width: 30px;
+  height: 30px;
+  border: 1px solid var(--gold);
+}
+.letter-parchment::before {
+  top: 8px; left: 8px;
+  border-right: none; border-bottom: none;
+}
+.letter-parchment::after {
+  bottom: 8px; right: 8px;
+  border-left: none; border-top: none;
+}
+.letter-content {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 17px;
+  color: var(--white-soft);
+  line-height: 2.1;
+  text-align: left;
+  font-style: italic;
+}
+.cursor-blink {
+  display: inline-block;
+  width: 2px;
+  height: 18px;
+  background: var(--gold);
+  animation: blink 0.8s ease infinite;
+  vertical-align: middle;
+}
+@keyframes blink {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0; }
+}
+
+/* ==========================================
+   PAGE 10: FINAL
+   ========================================== */
+.names-together {
+  font-family: 'Playfair Display', serif;
+  font-style: italic;
+  font-size: 44px;
+  margin: 25px 0;
+}
+.name-ishaq { color: var(--gold); }
+.name-heart {
+  display: inline-block;
+  margin: 0 12px;
+  color: var(--rose);
+  animation: heartBeat 1.5s ease infinite;
+}
+@keyframes heartBeat {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.25); }
+}
+.name-noor { color: var(--rose-light); }
+
+.timezone-strip {
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  padding: 18px 15px;
+  background: rgba(0,0,0,0.2);
+  border: 1px solid rgba(212,175,55,0.12);
+  border-radius: 12px;
+  margin: 20px 0;
+}
+.timezone { text-align: center; }
+.timezone-label {
+  font-size: 10px;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  margin-bottom: 5px;
+}
+.timezone-time {
+  font-family: 'Playfair Display', serif;
+  font-size: 22px;
+  color: var(--gold-light);
+}
+.timezone-note {
+  font-size: 9px;
+  color: var(--text-muted);
+  margin-top: 3px;
+  letter-spacing: 1px;
+}
+
+/* ==========================================
+   FLOATING PARTICLES
+   ========================================== */
+.floating-particle {
+  position: fixed;
+  pointer-events: none;
+  z-index: 100;
+  top: -50px;
+  animation: floatDown linear forwards;
+}
+@keyframes floatDown {
+  to { transform: translateY(110vh) rotate(360deg); opacity: 0; }
+}
+
+.sparkle {
+  position: fixed;
+  pointer-events: none;
+  z-index: 100;
+  width: 4px;
+  height: 4px;
+  background: var(--gold-light);
+  border-radius: 50%;
+  animation: sparkleFade 1s ease forwards;
+}
+@keyframes sparkleFade {
+  0% { transform: scale(0); opacity: 1; }
+  50% { transform: scale(2); opacity: 0.8; }
+  100% { transform: scale(0); opacity: 0; }
+}
+
+/* ==========================================
+   RESPONSIVE
+   ========================================== */
+@media (max-width: 480px) {
+  .card { padding: 40px 22px; margin: 10px; }
+  .title-italic { font-size: 32px; }
+  .names-together { font-size: 34px; }
+  .truth-grid { grid-template-columns: 1fr 1fr; gap: 8px; }
+  .truth-card { height: 135px; }
+  .breath-container { width: 200px; height: 200px; }
+}
+</style>
+</head>
+<body>
+
+<canvas id="stars-canvas"></canvas>
+
+<!-- ===== PAGE 1: MOON OPENING ===== -->
+<div class="page active" id="page1">
+  <div class="card">
+    <div class="eyebrow">For The Heavy Days</div>
+    <h1 class="title-italic">Noor,</h1>
+    <p class="subtitle">this found you for a reason</p>
+    
+    <div class="moon-scene">
+      <div class="moon">
+        <div class="moon-crater mc1"></div>
+        <div class="moon-crater mc2"></div>
+        <div class="moon-crater mc3"></div>
+      </div>
+    </div>
+    
+    <p class="text-body">
+      Even the moon has craters.<br>
+      And still... it lights up the whole sky.<br>
+      <span style="color:var(--gold-light);font-style:italic">Just like you.</span>
+    </p>
+    
+    <div class="divider"><span>✦</span></div>
+    
+    <button class="btn btn-filled" onclick="goPage('page2')">
+      Open This Gently
+    </button>
+  </div>
+</div>
+
+<!-- ===== PAGE 2: VALIDATION ===== -->
+<div class="page" id="page2">
+  <div class="card">
+    <div class="eyebrow">First, Let Me Say This</div>
+    <h1 class="title-italic">I know today hurt</h1>
+    
+    <div class="tear-drop">💧</div>
+    
+    <div>
+      <p class="validation-line" data-delay="500">I know the morning was heavy.</p>
+      <p class="validation-line" data-delay="1800">I know the words stung.</p>
+      <p class="validation-line" data-delay="3100">I know you carry so much...</p>
+      <p class="validation-line" data-delay="4400">and still get blamed for the small cracks.</p>
+      <p class="validation-line rose" data-delay="6000">That's not fair to you.</p>
+      <p class="validation-line gold" data-delay="7500">And your tears? They're valid. Every single one.</p>
+    </div>
+    
+    <p class="text-body" id="page2Note" style="opacity:0;transition:opacity 1s ease">
+      You don't have to hold it together right now.<br>
+      Not with me. 🌙
+    </p>
+    
+    <button class="btn" id="page2Btn" onclick="goPage('page3')" style="opacity:0;transition:opacity 1s ease">
+      Breathe With Me
+    </button>
+  </div>
+</div>
+
+<!-- ===== PAGE 3: BREATHING EXERCISE ===== -->
+<div class="page" id="page3">
+  <div class="card">
+    <div class="eyebrow">Just For A Moment</div>
+    <h1 class="title-italic">Breathe, Noor</h1>
+    <p class="subtitle">Follow the circle. I'll count with you.</p>
+    
+    <div class="breath-container">
+      <div class="breath-ring"></div>
+      <div class="breath-circle" id="breathCircle">
+        <div class="breath-text" id="breathText">Ready?</div>
+      </div>
+    </div>
+    
+    <div class="breath-count" id="breathCount">Press start when you're ready</div>
+    
+    <button class="btn btn-filled" id="breathBtn" onclick="startBreathing()">
+      Begin Breathing
+    </button>
+    
+    <button class="btn" id="breathNext" onclick="goPage('page4')" style="display:none">
+      I Feel A Little Lighter
+    </button>
+  </div>
+</div>
+
+<!-- ===== PAGE 4: RELEASE WORRIES ===== -->
+<div class="page" id="page4">
+  <div class="card">
+    <div class="eyebrow">Let Them Go</div>
+    <h1 class="title-italic">Release your worries</h1>
+    <p class="subtitle">Tap each worry... and watch it dissolve</p>
+    
+    <div class="worry-field" id="worryField"></div>
+    
+    <p id="worryStatus" class="text-body" style="min-height:30px"></p>
+    
+    <button class="btn btn-filled" id="worryNext" onclick="goPage('page5')" style="display:none">
+      Continue
+    </button>
+  </div>
+</div>
+
+<!-- ===== PAGE 5: HER STRENGTH ===== -->
+<div class="page" id="page5">
+  <div class="card">
+    <div class="eyebrow">What I See In You</div>
+    <h1 class="title-italic">Your quiet strength</h1>
+    <p class="subtitle">Things you do that nobody claps for — but I notice</p>
+    
+    <div id="strengthList">
+      <div class="strength-item" data-delay="300">
+        <div class="strength-icon">🏠</div>
+        <div class="strength-text">You hold an entire home together on your shoulders</div>
+      </div>
+      <div class="strength-item" data-delay="1200">
+        <div class="strength-icon">🌅</div>
+        <div class="strength-text">You wake up and do it all again, every single day</div>
+      </div>
+      <div class="strength-item" data-delay="2100">
+        <div class="strength-icon">💔</div>
+        <div class="strength-text">You get hurt... and still choose to be kind</div>
+      </div>
+      <div class="strength-item" data-delay="3000">
+        <div class="strength-icon">🤫</div>
+        <div class="strength-text">You cry silently so others don't worry about you</div>
+      </div>
+      <div class="strength-item" data-delay="3900">
+        <div class="strength-icon">✨</div>
+        <div class="strength-text">And somehow... you still shine. That's rare, Noor.</div>
+      </div>
+    </div>
+    
+    <p class="text-script" id="strengthNote" style="opacity:0;transition:opacity 1s ease">
+      The world may forget to thank you.<br>I never will.
+    </p>
+    
+    <button class="btn" id="strengthBtn" onclick="goPage('page6')" style="opacity:0;transition:opacity 1s ease">
+      Continue
+    </button>
+  </div>
+</div>
+
+<!-- ===== PAGE 6: TRUTH CARDS ===== -->
+<div class="page" id="page6">
+  <div class="card">
+    <div class="eyebrow">Truths You Forget</div>
+    <h1 class="title-italic">Flip each card</h1>
+    <p class="subtitle">Four truths. All about you. All real.</p>
+    
+    <div class="truth-grid">
+      <div class="truth-card" onclick="flipTruth(this)">
+        <div class="truth-inner">
+          <div class="truth-front">Truth<br>№ 1</div>
+          <div class="truth-back">A mistake you made does not make YOU a mistake</div>
+        </div>
+      </div>
+      <div class="truth-card" onclick="flipTruth(this)">
+        <div class="truth-inner">
+          <div class="truth-front">Truth<br>№ 2</div>
+          <div class="truth-back">Being tired doesn't mean you're weak. It means you've been strong too long</div>
+        </div>
+      </div>
+      <div class="truth-card" onclick="flipTruth(this)">
+        <div class="truth-inner">
+          <div class="truth-front">Truth<br>№ 3</div>
+          <div class="truth-back">You don't have to earn love through perfection</div>
+        </div>
+      </div>
+      <div class="truth-card" onclick="flipTruth(this)">
+        <div class="truth-inner">
+          <div class="truth-front">Truth<br>№ 4</div>
+          <div class="truth-back">Someone 4,500 km away thinks you're extraordinary</div>
+        </div>
+      </div>
+    </div>
+    
+    <p id="truthMsg" class="text-body" style="min-height:30px"></p>
+    
+    <button class="btn btn-filled" id="truthNext" onclick="goPage('page7')" style="display:none">
+      Continue
+    </button>
+  </div>
+</div>
+
+<!-- ===== PAGE 7: HUG FROM AFAR ===== -->
+<div class="page" id="page7">
+  <div class="card">
+    <div class="eyebrow">From 4,500 KM Away</div>
+    <h1 class="title-italic">A real hug</h1>
+    <p class="subtitle">Press and hold... feel it travel to you</p>
+    
+    <div class="hug-container">
+      <button class="hug-btn" id="hugBtn"
+        onmousedown="startHug()" onmouseup="endHug()" onmouseleave="endHug()"
+        ontouchstart="startHug(event)" ontouchend="endHug()">
+        <div class="hug-fill" id="hugFill"></div>
+        <div class="hug-label">Hold<br>Me</div>
+      </button>
+    </div>
+    
+    <div class="hug-status" id="hugStatus">
+      Press and hold the circle...
+    </div>
+    
+    <button class="btn btn-filled" id="hugNext" onclick="goPage('page8')" style="display:none">
+      I Felt It
+    </button>
+  </div>
+</div>
+
+<!-- ===== PAGE 8: REASONS ===== -->
+<div class="page" id="page8">
+  <div class="card">
+    <div class="eyebrow">In Case You Forgot</div>
+    <h1 class="title-italic">Why you matter</h1>
+    
+    <div class="reason-counter" id="reasonCounter">Reason 1 of 8</div>
+    <div class="reason-display">
+      <div class="reason-text" id="reasonText">
+        Because your existence makes someone's day better — every day.
+      </div>
+    </div>
+    
+    <button class="btn" onclick="nextReason()">Another Reason</button>
+    
+    <button class="btn btn-filled" id="reasonNext" onclick="goPage('page9')" style="display:none">
+      Read My Letter
+    </button>
+  </div>
+</div>
+
+<!-- ===== PAGE 9: LETTER ===== -->
+<div class="page" id="page9">
+  <div class="card">
+    <div class="eyebrow">From My Heart To Yours</div>
+    <h1 class="title-italic">A letter</h1>
+    
+    <div class="letter-parchment">
+      <div class="letter-content" id="letterText"></div>
+      <span class="cursor-blink" id="letterCursor"></span>
+    </div>
+    
+    <button class="btn btn-filled" id="letterNext" onclick="goPage('page10')" style="display:none">
+      One Last Thing
+    </button>
+  </div>
+</div>
+
+<!-- ===== PAGE 10: FINAL ===== -->
+<div class="page" id="page10">
+  <div class="card">
+    <div class="eyebrow">Whenever You Need Me</div>
+    
+    <div class="names-together">
+      <span class="name-ishaq">Ishaq</span>
+      <span class="name-heart">♥</span>
+      <span class="name-noor">Noor</span>
+    </div>
+    
+    <div class="timezone-strip">
+      <div class="timezone">
+        <div class="timezone-label">🇵🇰 Pakistan</div>
+        <div class="timezone-time" id="ishaqTime">--:--</div>
+        <div class="timezone-note">MY TIME</div>
+      </div>
+      <div class="timezone-separator" style="color:var(--gold)">·</div>
+      <div class="timezone">
+        <div class="timezone-label">🇰🇪 Kenya</div>
+        <div class="timezone-time" id="noorTime">--:--</div>
+        <div class="timezone-note">YOUR TIME</div>
+      </div>
+    </div>
+    
+    <p class="text-quote">
+      Different hours. Same sky.<br>
+      Whenever you look up —<br>
+      I'm under the same moon, thinking of you.
+    </p>
+    
+    <div class="divider"><span>✦</span></div>
+    
+    <p class="text-script">
+      Bad day?<br>
+      Call me. Text me. Or just come back here.<br>
+      <span style="color:var(--gold-light)">This page never goes anywhere. Neither do I.</span>
+    </p>
+    
+    <button class="btn" onclick="restartJourney()">
+      Feel It Again
+    </button>
+    
+    <p style="font-size:10px;color:var(--text-muted);margin-top:25px;letter-spacing:2px;text-transform:uppercase">
+      Made for Noor · On a day she needed it most
+    </p>
+  </div>
+</div>
+
+<script>
+// ==========================================
+//   GLOBALS
+// ==========================================
+let breathCycles = 0;
+let breathing = false;
+let worriesReleased = 0;
+let truthsFlipped = 0;
+let hugProgress = 0;
+let hugInterval = null;
+let hugComplete = false;
+let currentReason = 0;
+let letterStarted = false;
+
+// ==========================================
+//   STAR BACKGROUND
+// ==========================================
+const canvas = document.getElementById('stars-canvas');
+const ctx = canvas.getContext('2d');
+let stars = [];
+
+function resizeCanvas() {
+  canvas.width = window.innerWidth;
+  canvas.height = window.innerHeight;
+}
+window.addEventListener('resize', resizeCanvas);
+resizeCanvas();
+
+class Star {
+  constructor() { this.reset(); }
+  reset() {
+    this.x = Math.random() * canvas.width;
+    this.y = Math.random() * canvas.height;
+    this.size = Math.random() * 1.5 + 0.3;
+    this.opacity = Math.random() * 0.8 + 0.2;
+    this.twinkleSpeed = Math.random() * 0.02 + 0.005;
+    this.twinkleDir = Math.random() > 0.5 ? 1 : -1;
+    const colors = ['212, 175, 55', '244, 212, 124', '245, 230, 211', '155, 142, 196', '183, 110, 121'];
+    this.color = colors[Math.floor(Math.random() * colors.length)];
+  }
+  update() {
+    this.opacity += this.twinkleSpeed * this.twinkleDir;
+    if (this.opacity > 1 || this.opacity < 0.2) this.twinkleDir *= -1;
+  }
+  draw() {
+    ctx.beginPath();
+    ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+    ctx.fillStyle = `rgba(${this.color}, ${this.opacity})`;
+    ctx.shadowBlur = 8;
+    ctx.shadowColor = `rgba(${this.color}, 0.5)`;
+    ctx.fill();
+    ctx.shadowBlur = 0;
+  }
+}
+
+for (let i = 0; i < 120; i++) stars.push(new Star());
+
+function animateStars() {
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+  stars.forEach(s => { s.update(); s.draw(); });
+  requestAnimationFrame(animateStars);
+}
+animateStars();
+
+// ==========================================
+//   NAVIGATION
+// ==========================================
+function goPage(id) {
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+  
+  if (id === 'page2') animateValidation();
+  if (id === 'page4') buildWorries();
+  if (id === 'page5') animateStrength();
+  if (id === 'page9' && !letterStarted) { letterStarted = true; startLetter(); }
+  if (id === 'page10') { updateTimezones(); floatParticles(20); }
+}
+
+// ==========================================
+//   PAGE 2: VALIDATION
+// ==========================================
+function animateValidation() {
+  const lines = document.querySelectorAll('#page2 .validation-line');
+  lines.forEach(line => {
+    const delay = parseInt(line.getAttribute('data-delay'));
+    setTimeout(() => line.classList.add('visible'), delay);
+  });
+  setTimeout(() => {
+    document.getElementById('page2Note').style.opacity = '1';
+    document.getElementById('page2Btn').style.opacity = '1';
+  }, 8800);
+}
+
+// ==========================================
+//   PAGE 3: BREATHING
+// ==========================================
+function startBreathing() {
+  if (breathing) return;
+  breathing = true;
+  breathCycles = 0;
+  document.getElementById('breathBtn').style.display = 'none';
+  
+  const circle = document.getElementById('breathCircle');
+  const text = document.getElementById('breathText');
+  const count = document.getElementById('breathCount');
+  
+  function cycle() {
+    if (breathCycles >= 4) {
+      text.innerText = "Well done 🌙";
+      count.innerText = "Feel that? A little calmer.";
+      breathing = false;
+      document.getElementById('breathNext').style.display = 'inline-block';
+      floatParticles(12);
+      return;
+    }
+    
+    // Inhale 4s
+    circle.classList.remove('exhale');
+    circle.classList.add('inhale');
+    text.innerText = "Breathe in...";
+    count.innerText = `Breath ${breathCycles + 1} of 4 · In through nose`;
+    
+    setTimeout(() => {
+      // Hold 2s
+      text.innerText = "Hold...";
+      
+      setTimeout(() => {
+        // Exhale 4s
+        circle.classList.remove('inhale');
+        circle.classList.add('exhale');
+        text.innerText = "Let it go...";
+        count.innerText = `Breath ${breathCycles + 1} of 4 · Out slowly`;
+        
+        setTimeout(() => {
+          breathCycles++;
+          cycle();
+        }, 4000);
+      }, 2000);
+    }, 4000);
+  }
+  cycle();
+}
+
+// ==========================================
+//   PAGE 4: RELEASE WORRIES
+// ==========================================
+function buildWorries() {
+  const field = document.getElementById('worryField');
+  field.innerHTML = '';
+  worriesReleased = 0;
+  document.getElementById('worryStatus').innerText = '';
+  document.getElementById('worryNext').style.display = 'none';
+  
+  const worries = [
+    "What if I mess up again?",
+    "They were so angry...",
+    "Am I not good enough?",
+    "Why is it always me?",
+    "I'm so tired...",
+    "Does anyone even notice?"
+  ];
+  
+  const releases = [
+    "You are human. Humans err. 🌙",
+    "Their anger is not your worth.",
+    "You are more than enough.",
+    "It's not always you. It never was.",
+    "Rest is allowed. Rest now.",
+    "I notice. I always notice. ✨"
+  ];
+  
+  const positions = [
+    { top: '8%', left: '5%' }, { top: '15%', left: '45%' },
+    { top: '32%', left: '15%' }, { top: '45%', left: '50%' },
+    { top: '62%', left: '8%' }, { top: '72%', left: '45%' }
+  ];
+  
+  worries.forEach((worry, i) => {
+    const b = document.createElement('div');
+    b.className = 'worry-bubble';
+    b.innerText = worry;
+    b.style.top = positions[i].top;
+    b.style.left = positions[i].left;
+    b.style.animationDelay = (i * 0.5) + 's';
+    
+    b.onclick = function() {
+      if (this.classList.contains('released')) return;
+      this.classList.add('released');
+      worriesReleased++;
+      
+      const msg = document.createElement('div');
+      msg.className = 'release-msg';
+      msg.innerText = releases[i];
+      msg.style.top = this.style.top;
+      msg.style.left = this.style.left;
+      field.appendChild(msg);
+      setTimeout(() => msg.remove(), 2000);
+      
+      goldSparkleBurst();
+      
+      if (worriesReleased === worries.length) {
+        document.getElementById('worryStatus').innerHTML = 
+          '<span style="color:var(--gold-light);font-style:italic">All released. They were never yours to carry. ✨</span>';
+        document.getElementById('worryNext').style.display = 'inline-block';
+        floatParticles(15);
+      } else {
+        document.getElementById('worryStatus').innerText = 
+          `${worriesReleased} of ${worries.length} released...`;
+      }
+    };
+    field.appendChild(b);
+  });
+}
+
+// ==========================================
+//   PAGE 5: STRENGTH
+// ==========================================
+function animateStrength() {
+  const items = document.querySelectorAll('.strength-item');
+  items.forEach(item => {
+    const delay = parseInt(item.getAttribute('data-delay'));
+    setTimeout(() => item.classList.add('visible'), delay);
+  });
+  setTimeout(() => {
+    document.getElementById('strengthNote').style.opacity = '1';
+    document.getElementById('strengthBtn').style.opacity = '1';
+  }, 4800);
+}
+
+// ==========================================
+//   PAGE 6: TRUTH CARDS
+// ==========================================
+function flipTruth(card) {
+  if (!card.classList.contains('flipped')) {
+    card.classList.add('flipped');
+    truthsFlipped++;
+    goldSparkleBurst();
+    
+    if (truthsFlipped === 4) {
+      document.getElementById('truthMsg').innerHTML = 
+        '<span style="color:var(--gold-light);font-style:italic">All four truths. Read them again tomorrow if you need to. 💛</span>';
+      document.getElementById('truthNext').style.display = 'inline-block';
+      floatParticles(12);
+    } else {
+      document.getElementById('truthMsg').innerText = `${truthsFlipped} of 4 truths revealed...`;
+    }
+  }
+}
+
+// ==========================================
+//   PAGE 7: HUG (Press & Hold)
+// ==========================================
+function startHug(e) {
+  if (e) e.preventDefault();
+  if (hugComplete) return;
+  
+  const btn = document.getElementById('hugBtn');
+  const fill = document.getElementById('hugFill');
+  const status = document.getElementById('hugStatus');
+  btn.classList.add('hugging');
+  
+  hugInterval = setInterval(() => {
+    hugProgress += 1;
+    fill.style.height = hugProgress + '%';
+    
+    if (hugProgress > 20 && hugProgress < 50) {
+      status.innerText = "The hug is leaving Pakistan... ✈️";
+    } else if (hugProgress >= 50 && hugProgress < 80) {
+      status.innerText = "Crossing the ocean... 🌊";
+      if (Math.random() > 0.7) spawnHugHeart();
+    } else if (hugProgress >= 80 && hugProgress < 100) {
+      status.innerText = "Almost to Kenya... 🌍";
+      if (Math.random() > 0.5) spawnHugHeart();
+    }
+    
+    if (hugProgress >= 100) {
+      clearInterval(hugInterval);
+      hugComplete = true;
+      status.innerHTML = "🤗 <b>Hug delivered.</b><br>It says: 'You're safe. You're loved. You're not alone.'";
+      btn.classList.remove('hugging');
+      document.getElementById('hugNext').style.display = 'inline-block';
+      floatParticles(25);
+      for (let i = 0; i < 10; i++) setTimeout(spawnHugHeart, i * 150);
+    }
+  }, 40);
+}
+
+function endHug() {
+  if (hugComplete) return;
+  clearInterval(hugInterval);
+  const btn = document.getElementById('hugBtn');
+  const status = document.getElementById('hugStatus');
+  btn.classList.remove('hugging');
+  
+  if (hugProgress > 0 && hugProgress < 100) {
+    status.innerText = "Hold longer... the hug needs to travel far 💛";
+    hugProgress = Math.max(0, hugProgress - 10);
+    document.getElementById('hugFill').style.height = hugProgress + '%';
+  }
+}
+
+function spawnHugHeart() {
+  const h = document.createElement('div');
+  h.className = 'hug-heart';
+  h.innerText = ['💛', '🤗', '✨', '🌙'][Math.floor(Math.random() * 4)];
+  h.style.left = (window.innerWidth / 2 + (Math.random() - 0.5) * 200) + 'px';
+  h.style.top = (window.innerHeight / 2) + 'px';
+  document.body.appendChild(h);
+  setTimeout(() => h.remove(), 2000);
+}
+
+// ==========================================
+//   PAGE 8: REASONS
+// ==========================================
+const reasons = [
+  "Because your existence makes someone's day better — every day.",
+  "Because you handle more than most people ever will... and you're still standing.",
+  "Because your kindness survives even when the world is unkind to you.",
+  "Because someone across an ocean smiles just thinking about you.",
+  "Because the home you hold together would fall apart without you.",
+  "Because your tears tonight will become someone else's comfort tomorrow.",
+  "Because 'Noor' means light — and you live up to your name.",
+  "Because you're still here. Still trying. That's the bravest thing of all."
+];
+
+function nextReason() {
+  currentReason++;
+  if (currentReason >= reasons.length) {
+    document.getElementById('reasonText').innerText = 
+      "...and a thousand more reasons I haven't written yet. 💛";
+    document.getElementById('reasonCounter').innerText = "∞ reasons remain";
+    document.getElementById('reasonNext').style.display = 'inline-block';
+    floatParticles(15);
+    return;
+  }
+  document.getElementById('reasonCounter').innerText = `Reason ${currentReason + 1} of ${reasons.length}`;
+  const el = document.getElementById('reasonText');
+  el.style.animation = 'none';
+  void el.offsetHeight;
+  el.style.animation = 'reasonIn 0.8s ease';
+  el.innerText = reasons[currentReason];
+  goldSparkleBurst();
+}
+
+// ==========================================
+//   PAGE 9: LETTER
+// ==========================================
+function startLetter() {
+  const letterContent = `My dear Noor,
+
+I wish I could be there right now. Not to say anything wise. Just to sit beside you while you breathe.
+
+I know today the house felt heavy. I know the words were sharp. I know you did a hundred things right... and got reminded of the one thing that went wrong.
+
+Listen to me carefully:
+
+You are not the sum of your mistakes.
+
+You are the girl who carries a whole home. Who absorbs everyone's storms and still asks others if they're okay. Who cries quietly and smiles publicly.
+
+That is not weakness, Noor. That is a kind of strength most people will never understand.
+
+So tonight, when the house sleeps and the world goes quiet — remember this:
+
+4,500 kilometers away, there is someone who sees you. Fully. The tired you. The trying you. The imperfect, beautiful, extraordinary you.
+
+And he wouldn't change a single thing.
+
+Rest now. Tomorrow is softer.
+
+Always yours,
+Ishaq 💛`;
+
+  const textEl = document.getElementById('letterText');
+  const cursor = document.getElementById('letterCursor');
+  textEl.innerHTML = '';
+  let i = 0;
+  
+  function typeChar() {
+    if (i < letterContent.length) {
+      if (letterContent[i] === '\n') textEl.innerHTML += '<br>';
+      else textEl.innerHTML += letterContent[i];
+      i++;
+      textEl.parentElement.scrollTop = textEl.parentElement.scrollHeight;
+      setTimeout(typeChar, 35);
+    } else {
+      cursor.style.display = 'none';
+      document.getElementById('letterNext').style.display = 'inline-block';
+    }
+  }
+  typeChar();
+}
+
+// ==========================================
+//   PAGE 10: TIMEZONES
+// ==========================================
+function updateTimezones() {
+  function update() {
+    const now = new Date();
+    const utcH = now.getUTCHours();
+    const m = String(now.getUTCMinutes()).padStart(2, '0');
+    
+    // Pakistan = UTC + 5
+    document.getElementById('ishaqTime').innerText = 
+      `${String((utcH + 5) % 24).padStart(2, '0')}:${m}`;
+    // Kenya = UTC + 3
+    document.getElementById('noorTime').innerText = 
+      `${String((utcH + 3) % 24).padStart(2, '0')}:${m}`;
+  }
+  update();
+  setInterval(update, 60000);
+}
+
+// ==========================================
+//   EFFECTS
+// ==========================================
+function goldSparkleBurst() {
+  for (let i = 0; i < 6; i++) {
+    setTimeout(() => {
+      const s = document.createElement('div');
+      s.className = 'sparkle';
+      s.style.left = (window.innerWidth/2 + (Math.random()-0.5)*300) + 'px';
+      s.style.top = (window.innerHeight/2 + (Math.random()-0.5)*250) + 'px';
+      document.body.appendChild(s);
+      setTimeout(() => s.remove(), 1000);
+    }, i * 60);
+  }
+}
+
+function floatParticles(count = 15) {
+  const items = ['✦', '🌙', '💛', '✨', '·'];
+  const colors = ['#d4af37', '#f4d47c', '#b76e79', '#9b8ec4', '#f5e6d3'];
+  for (let i = 0; i < count; i++) {
+    setTimeout(() => {
+      const p = document.createElement('div');
+      p.className = 'floating-particle';
+      p.innerText = items[Math.floor(Math.random() * items.length)];
+      p.style.left = Math.random() * 100 + 'vw';
+      p.style.color = colors[Math.floor(Math.random() * colors.length)];
+      p.style.fontSize = (Math.random() * 14 + 12) + 'px';
+      p.style.animationDuration = (Math.random() * 4 + 4) + 's';
+      document.body.appendChild(p);
+      setTimeout(() => p.remove(), 9000);
+    }, i * 150);
+  }
+}
+
+// ==========================================
+//   RESTART
+// ==========================================
+function restartJourney() {
+  breathCycles = 0; breathing = false;
+  worriesReleased = 0; truthsFlipped = 0;
+  hugProgress = 0; hugComplete = false;
+  currentReason = 0; letterStarted = false;
+  
+  document.querySelectorAll('.validation-line').forEach(l => l.classList.remove('visible'));
+  document.getElementById('page2Note').style.opacity = '0';
+  document.getElementById('page2Btn').style.opacity = '0';
+  document.querySelectorAll('.strength-item').forEach(i => i.classList.remove('visible'));
+  document.getElementById('strengthNote').style.opacity = '0';
+  document.getElementById('strengthBtn').style.opacity = '0';
+  document.querySelectorAll('.truth-card').forEach(c => c.classList.remove('flipped'));
+  document.getElementById('truthMsg').innerText = '';
+  document.getElementById('truthNext').style.display = 'none';
+  document.getElementById('hugFill').style.height = '0%';
+  document.getElementById('hugStatus').innerText = 'Press and hold the circle...';
+  document.getElementById('hugNext').style.display = 'none';
+  document.getElementById('reasonCounter').innerText = 'Reason 1 of 8';
+  document.getElementById('reasonText').innerText = reasons[0];
+  document.getElementById('reasonNext').style.display = 'none';
+  document.getElementById('breathBtn').style.display = 'inline-block';
+  document.getElementById('breathNext').style.display = 'none';
+  document.getElementById('breathText').innerText = 'Ready?';
+  document.getElementById('breathCount').innerText = 'Press start when you\'re ready';
+  document.getElementById('letterNext').style.display = 'none';
+  document.getElementById('letterCursor').style.display = 'inline-block';
+  
+  goPage('page1');
+}
+
+// ==========================================
+//   MOUSE SPARKLE
+// ==========================================
+document.addEventListener('mousemove', (e) => {
+  if (Math.random() > 0.94) {
+    const s = document.createElement('div');
+    s.className = 'sparkle';
+    s.style.left = e.clientX + 'px';
+    s.style.top = e.clientY + 'px';
+    document.body.appendChild(s);
+    setTimeout(() => s.remove(), 1000);
+  }
+});
+</script>
+
+</body>
+</html>
